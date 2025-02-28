@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WildLens - Identification d'empreintes animales</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Chart.js for statistics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <img src="assets/img/logo.png" alt="WildLens Logo">
+                WildLens
+            </a>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="active">Accueil</a></li>
+                    <li><a href="identify.html">Identifier</a></li>
+                    <li><a href="observations.html">Observations</a></li>
+                    <li><a href="about.html">À propos</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Découvrez la faune sauvage à travers ses empreintes</h1>
+                <p>Utilisez WildLens pour identifier les traces animales et contribuez à la protection de la biodiversité.</p>
+                <a href="identify.html" class="btn btn-secondary btn-lg">Identifier une empreinte</a>
+            </div>
+        </div>
+        <div class="hero-background"></div>
+    </section>
+
+    <!-- Features section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Comment ça fonctionne ?</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3>Photographiez</h3>
+                    <p>Prenez une photo claire d'une empreinte d'animal que vous rencontrez dans la nature.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Identifiez</h3>
+                    <p>Notre intelligence artificielle analyse l'image et identifie l'animal qui a laissé cette empreinte.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3>Apprenez</h3>
+                    <p>Découvrez des informations fascinantes sur l'animal identifié et son mode de vie.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>Contribuez</h3>
+                    <p>Chaque observation aide les chercheurs à mieux comprendre et protéger notre faune sauvage.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Camera section -->
+    <section class="camera-section bg-primary p-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 d-flex align-items-center">
+                    <div class="text-white">
+                        <h2>Prêt à identifier une empreinte ?</h2>
+                        <p class="mb-4">Utilisez notre application pour reconnaître instantanément les traces d'animaux sauvages.</p>
+                        <a href="identify.html" class="btn btn-secondary btn-lg">Commencer maintenant</a>
+                    </div>
+                </div>
+                <div class="col-md-6" id="cameraContainer">
+                    <div class="camera-view">
+                        <video id="camera" autoplay playsinline></video>
+                        <canvas id="canvas" style="display:none;"></canvas>
+                        <img id="photo" alt="Votre photo apparaîtra ici">
+                        <div class="camera-controls">
+                            <button id="captureBtn" class="btn btn-secondary btn-circle">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                            <button id="retakeBtn" class="btn btn-outline-secondary btn-circle" style="display:none;">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="loader" class="loader"></div>
+
+                    <div id="resultCard" class="card result-card mt-4">
+                        <div class="result-header">
+                            <h5 class="mb-0">Résultat de l'identification</h5>
+                        </div>
+                        <div class="card-body">
+                            <h3 id="animalName" class="mb-3 text-center">Nom de l'animal</h3>
+                            <div class="text-center mb-3">
+                                <p class="mb-1">Confiance: <span id="confidenceValue">0%</span></p>
+                                <div class="confidence-bar">
+                                    <div id="confidenceBar" class="confidence-level"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Habitat:</strong> <span id="habitat">-</span></p>
+                                    <p><strong>Comportement:</strong> <span id="behavior">-</span></p>
+                                    <p><strong>Taille:</strong> <span id="size">-</span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Alimentation:</strong> <span id="diet">-</span></p>
+                                    <p><strong>Statut:</strong> <span id="status">-</span></p>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <p id="description">-</p>
+                            </div>
+                            <h5 class="mt-4">Autres possibilités:</h5>
+                            <ul id="alternatives" class="list-group list-group-flush">
+                                <li class="list-group-item">Chargement des alternatives...</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- About section -->
+    <section class="about-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Notre Mission</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-image">
+                    <img src="assets/img/wildlife-conservation.jpg" alt="Conservation de la faune">
+                </div>
+                <div class="about-text">
+                    <h3>Sensibiliser et protéger</h3>
+                    <p>WildLens est une association française engagée dans la protection animale dans les régions sauvages. Nous collectons des fonds pour financer nos actions et menons des campagnes de sensibilisation pour informer le public sur les enjeux de la conservation de la faune sauvage.</p>
+                    <p>Notre application d'identification d'empreintes a pour but de sensibiliser le public à la préservation de la faune sauvage de façon ludique, en leur montrant les traces laissées par ces animaux dans leur habitat naturel.</p>
+                    <p>Chaque observation contribue à recueillir des données précieuses sur les animaux, telles que leur fréquence de passage et leur emplacement, qui sont utilisées pour suivre leur évolution et établir des plans de préservation efficaces.</p>
+                    <a href="about.html" class="btn btn-primary mt-3">En savoir plus</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>WildLens</h3>
+                    <p>Découvrir et protéger la faune sauvage à travers ses empreintes.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Liens rapides</h3>
+                    <ul>
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="identify.html">Identifier</a></li>
+                        <li><a href="observations.html">Observations</a></li>
+                        <li><a href="about.html">À propos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> contact@wildlens.org</li>
+                        <li><i class="fas fa-phone"></i> +33 1 23 45 67 89</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Paris, France</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Suivez-nous</h3>
+                    <div class="social-links">
+                        <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 WildLens. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="assets/js/app.js"></script>
+</body>
+</html>

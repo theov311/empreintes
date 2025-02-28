@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Observations - WildLens</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Chart.js for statistics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <img src="assets/img/logo.png" alt="WildLens Logo">
+                WildLens
+            </a>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="identify.html">Identifier</a></li>
+                    <li><a href="observations.html" class="active">Observations</a></li>
+                    <li><a href="about.html">À propos</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main>
+        <section class="p-5">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Observations récentes</h2>
+                    <p>Découvrez les empreintes identifiées par notre communauté</p>
+                </div>
+                
+                <!-- Statistics summary -->
+                <div class="stats-grid mb-5">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalObservations">0</div>
+                        <div class="stat-label">Observations totales</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="uniqueSpecies">0</div>
+                        <div class="stat-label">Espèces différentes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="lastWeekCount">0</div>
+                        <div class="stat-label">Cette semaine</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="topSpecies">-</div>
+                        <div class="stat-label">Espèce la plus observée</div>
+                    </div>
+                </div>
+                
+                <!-- Filter controls -->
+                <div class="filter-controls mb-4">
+                    <select id="speciesFilter" class="filter-select">
+                        <option value="">Toutes les espèces</option>
+                    </select>
+                    <select id="dateFilter" class="filter-select">
+                        <option value="">Toutes les dates</option>
+                        <option value="week">Cette semaine</option>
+                        <option value="month">Ce mois</option>
+                        <option value="year">Cette année</option>
+                    </select>
+                    <input type="text" id="searchFilter" class="filter-input" placeholder="Rechercher...">
+                    <button id="applyFilters" class="btn btn-primary btn-sm">Appliquer</button>
+                    <button id="resetFilters" class="btn btn-outline-primary btn-sm">Réinitialiser</button>
+                </div>
+                
+                <!-- Observations grid -->
+                <div class="observations-grid" id="observationsGrid">
+                    <div class="loader"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Statistics section -->
+        <section class="stats-section">
+            <div class="container" id="statsContainer">
+                <div class="section-title">
+                    <h2>Statistiques</h2>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="chart-container">
+                            <canvas id="speciesChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="chart-container">
+                            <canvas id="dateChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Call to action -->
+        <section class="bg-primary p-5 text-white">
+            <div class="container text-center">
+                <h2>Contribuez à notre base de données</h2>
+                <p>Chaque nouvelle observation est précieuse pour mieux comprendre et protéger notre faune sauvage.</p>
+                <a href="identify.html" class="btn btn-secondary mt-3">Identifier une empreinte</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>WildLens</h3>
+                    <p>Découvrir et protéger la faune sauvage à travers ses empreintes.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Liens rapides</h3>
+                    <ul>
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="identify.html">Identifier</a></li>
+                        <li><a href="observations.html">Observations</a></li>
+                        <li><a href="about.html">À propos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> contact@wildlens.org</li>
+                        <li><i class="fas fa-phone"></i> +33 1 23 45 67 89</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Paris, France</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Suivez-nous</h3>
+                    <div class="social-links">
+                        <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 WildLens. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
