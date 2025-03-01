@@ -26,8 +26,10 @@ def train_model(model, train_generator, val_generator, X_train, X_val, model_pat
         Le modèle entraîné et l'historique d'entraînement combiné
     """
     # Créer un dossier pour les logs TensorBoard
-    log_dir = os.path.join("logs", datetime.now().strftime("%Y%m%d-%H%M%S"))
+    import tempfile
+    log_dir = os.path.join(tempfile.gettempdir(), "wildlens_logs", datetime.now().strftime("%Y%m%d-%H%M%S"))
     os.makedirs(log_dir, exist_ok=True)
+    print(f"Dossier de logs créé: {log_dir}")
     
     # Callbacks pour optimiser l'entraînement
     callbacks = [
@@ -49,11 +51,6 @@ def train_model(model, train_generator, val_generator, X_train, X_val, model_pat
             monitor='val_accuracy',
             save_best_only=True,
             verbose=1
-        ),
-        TensorBoard(
-            log_dir=log_dir,
-            histogram_freq=1,
-            write_graph=True
         )
     ]
     

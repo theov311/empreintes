@@ -14,14 +14,14 @@ CSV_PATH = os.path.join(DATA_DIR, "infos_especes.csv")
 # Paramètres du modèle
 INPUT_SHAPE = (224, 224, 3)
 BATCH_SIZE = 32
-EPOCHS_INITIAL = 30
-EPOCHS_FINE_TUNING = 20
-LEARNING_RATE_INITIAL = 0.001
-LEARNING_RATE_FINE_TUNING = 1e-5
+EPOCHS_INITIAL = 50
+EPOCHS_FINE_TUNING = 30
+LEARNING_RATE_INITIAL = 0.0005
+LEARNING_RATE_FINE_TUNING = 5e-6
 
 # Liste des espèces
 SPECIES_LIST = ["Castor", "Chat", "Chien", "Coyote", "Ecureuil", "Lapin", 
-                "Loup", "Ours", "Putois", "Ragondin", "Rat", "Raton Laveur", "Renard"]
+                "Loup", "Ours", "Rat", "Renard"]
 
 # Paramètres de l'API
 MODEL_PATH = os.path.join(BASE_DIR, "best_footprint_model.h5")

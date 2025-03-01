@@ -26,7 +26,7 @@ def load_data():
         raise FileNotFoundError(f"Le fichier CSV {CSV_PATH} n'existe pas")
     
     # Chargement des informations sur les espèces
-    species_info = pd.read_csv(CSV_PATH)
+    species_info = pd.read_csv(CSV_PATH, sep=';')
     
     # Vérifier quelles espèces sont présentes dans le dossier
     available_species = [s for s in os.listdir(MAMMALS_DIR) if os.path.isdir(os.path.join(MAMMALS_DIR, s))]
