@@ -24,7 +24,7 @@ SPECIES_LIST = ["Castor", "Chat", "Chien", "Coyote", "Ecureuil", "Lapin",
                 "Loup", "Ours", "Rat", "Renard"]
 
 # Paramètres de l'API
-MODEL_PATH = os.path.join(BASE_DIR, "best_footprint_model.h5")
+MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "best_footprint_model.h5")
 DATABASE_PATH = os.path.join(BASE_DIR, "wildlens.db")
 
 # Paramètres du serveur
