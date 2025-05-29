@@ -58,22 +58,15 @@ wildlens/
 1. **Cloner le dépôt**
 
 ```bash
-git clone https://github.com/votre-utilisateur/wildlens.git
-cd wildlens
+git clone https://github.com/theov311/empreintes.git
 ```
 
-2. **Installer les dépendances Python**
-
-```bash
-pip install -r backend/requirements.txt
-```
-
-3. **Préparer les données**
+2. **Préparer les données**
 
 - Téléchargez le jeu de données d'empreintes et placez-le dans le dossier `data/Mammiferes/`
 - Assurez-vous que le fichier `data/infos_especes.csv` est présent
 
-4. **Démarrer l'application**
+3. **Démarrer l'application**
 
 ```bash
 # Rendre le script exécutable
