@@ -1,136 +1,85 @@
-# WildLens - Application d'identification d'empreintes animales
+# WildLens
 
-WildLens est une application web qui permet d'identifier les empreintes d'animaux sauvages grâce à l'intelligence artificielle. Cette application utilise un modèle de deep learning pour analyser les photos d'empreintes prises par les utilisateurs et identifier l'espèce animale correspondante.
+Identifier l'animal qui a laissé une empreinte à partir d'une simple photo, pour une application de sensibilisation à la faune sauvage.
 
-## Fonctionnalités
+Projet de certification réalisé en 2025 (Bachelor Développeur IA et Data Analyst, EPSI Toulouse).
 
-- **Identification d'empreintes** : Prenez une photo d'une empreinte animale et obtenez instantanément l'identification de l'espèce
-- **Informations sur les espèces** : Découvrez des informations détaillées sur chaque animal identifié
-- **Suivi des observations** : Consultez toutes les observations enregistrées par la communauté
-- **Statistiques** : Visualisez des statistiques sur les observations collectées
-- **Contribution à la science** : Chaque observation contribue à la recherche et à la protection de la faune sauvage
+## Résultats
 
-## Structure du projet
+| Métrique | Valeur |
+|---|---|
+| Accuracy | **87,2 %** |
+| Top-3 accuracy | **96,4 %** |
 
-Le projet est organisé en deux parties principales:
+Le top-3 compte une bonne réponse quand la bonne espèce figure parmi les trois propositions du modèle. C'est le cas d'usage visé : l'application montre à l'utilisateur les trois espèces les plus probables.
 
-1. **Backend (API)** : Développé avec Python, Flask et TensorFlow
-2. **Frontend** : Développé en HTML, CSS et JavaScript
+## Le problème
 
-### Structure des dossiers
+Le jeu de données est petit et déséquilibré : quelques centaines de photos d'empreintes, de 10 à 24 images selon l'espèce, prises dans des conditions très variables (boue, neige, sable, éclairage). Entraîner un réseau de zéro sur si peu d'images mène droit au surapprentissage.
 
-```
-wildlens/
-├── backend/
-│   ├── models/            # Code relatif aux modèles ML
-│   ├── api/               # API Flask
-│   ├── utils/             # Fonctions utilitaires
-│   ├── config.py          # Configuration du projet
-│   ├── train_model.py     # Script d'entraînement du modèle
-│   └── requirements.txt   # Dépendances Python
-├── frontend/
-│   ├── assets/
-│   │   ├── css/           # Styles CSS
-│   │   ├── js/            # Scripts JavaScript
-│   │   └── img/           # Images et ressources
-│   ├── index.html         # Page d'accueil
-│   ├── identify.html      # Page d'identification
-│   ├── observations.html  # Page des observations
-│   └── about.html         # Page À propos
-├── data/
-│   ├── Mammiferes/        # Images d'empreintes pour l'entraînement
-│   └── infos_especes.csv  # Informations sur les espèces
-├── uploads/               # Dossier pour les images téléchargées
-├── README.md              # Documentation
-├── .gitignore             # Fichiers à ignorer par Git
-└── run.sh                 # Script de démarrage
-```
+## L'approche
 
-## Prérequis
+- **Transfer learning** sur MobileNetV2 (par défaut) ou EfficientNetB0, pré-entraînés sur ImageNet, avec une tête de classification `Dense 256 → Dropout 0,5 → Dense 128 → Dropout 0,3 → softmax`.
+- **Entraînement en deux phases** : d'abord la tête seule, réseau de base gelé (learning rate 1e-3) ; puis fine-tuning des 30 dernières couches du réseau de base à learning rate très réduit (5e-6).
+- **Augmentation de données** pour compenser le faible volume : rotations, translations, cisaillement, zoom, retournements, variations de luminosité.
+- **Découpage stratifié** 70 / 15 / 15 (entraînement, validation, test) pour garder chaque espèce représentée dans chaque jeu.
+- **Garde-fous** contre le surapprentissage : early stopping, réduction du learning rate sur plateau, sauvegarde du meilleur modèle sur la validation.
+- **Évaluation** : accuracy, top-k accuracy et matrice de confusion pour repérer les espèces que le modèle confond.
 
-- Python 3.8 ou supérieur
-- pip (gestionnaire de paquets Python)
-- Navigateur web moderne (Chrome, Firefox, Edge, Safari)
-- Accès à une caméra (pour l'identification des empreintes)
+## Le service
 
-## Installation
+Une API REST Flask expose le modèle :
 
-1. **Cloner le dépôt**
+| Route | Rôle |
+|---|---|
+| `POST /api/identify` | Reçoit une photo, renvoie l'espèce prédite, la confiance et le top-3, et enregistre l'observation (date, position, espèce) dans SQLite |
+| `GET /api/species` | Liste des espèces reconnues |
+| `GET /api/status` | État du service et du modèle |
+
+## Données
+
+Le dossier `data/Mammiferes/` contient les photos d'empreintes de 13 espèces : castor, chat, chien, coyote, écureuil, lapin, loup, lynx, ours, puma, rat, raton laveur et renard.
+
+Les espèces utilisées pour l'entraînement se règlent dans `SPECIES_LIST` (`backend/config.py`). Le modèle fourni, `best_footprint_model.h5`, couvre les 10 espèces de cette liste.
+
+## Stack
+
+Python, TensorFlow / Keras, scikit-learn, pandas, NumPy, OpenCV, Matplotlib, Seaborn, Flask, SQLite.
+
+## Lancer le projet
 
 ```bash
 git clone https://github.com/theov311/empreintes.git
+cd empreintes
+python -m venv .venv
+source .venv/bin/activate      # Windows : .venv\Scripts\activate
+pip install -r backend/requirements.txt
+
+# Démarrer l'API sur http://localhost:5000 avec le modèle fourni
+python -m backend.api.app
+
+# Réentraîner (mobilenet ou efficientnet)
+python -m backend.train_model --model-type mobilenet
 ```
 
-2. **Préparer les données**
+L'entraînement attend aussi un fichier `data/infos_especes.csv` (séparateur `;`) décrivant les espèces. Il n'est pas versionné dans ce dépôt.
 
-- Téléchargez le jeu de données d'empreintes et placez-le dans le dossier `data/Mammiferes/`
-- Assurez-vous que le fichier `data/infos_especes.csv` est présent
+## Structure
 
-3. **Démarrer l'application**
-
-```bash
-# Rendre le script exécutable
-chmod +x run.sh
-
-# Lancer l'application
-./run.sh
+```
+backend/
+├── api/app.py               # API Flask
+├── models/
+│   ├── architecture.py      # Réseau (transfer learning)
+│   ├── data_preparation.py  # Chargement, découpage, augmentation
+│   ├── training.py          # Entraînement en deux phases
+│   └── evaluation.py        # Accuracy, top-k, matrice de confusion
+├── config.py                # Hyperparamètres et chemins
+└── train_model.py           # Pipeline complet d'entraînement
+data/Mammiferes/             # Photos d'empreintes, un dossier par espèce
+best_footprint_model.h5      # Modèle entraîné
 ```
 
-L'application sera accessible à l'adresse: http://localhost:5000
+## Auteur
 
-## Entraînement du modèle
-
-Si vous souhaitez entraîner le modèle vous-même:
-
-```bash
-python -m backend.train_model
-```
-
-Options disponibles:
-- `--model-type`: Type de modèle à utiliser (`mobilenet` ou `efficientnet`, par défaut: `mobilenet`)
-- `--skip-training`: Utiliser un modèle déjà entraîné (si disponible)
-
-## Utilisation
-
-1. Accédez à l'application via votre navigateur: http://localhost:5000
-2. Naviguez vers la page "Identifier"
-3. Autorisez l'accès à la caméra
-4. Prenez une photo d'une empreinte animale
-5. Consultez les résultats de l'identification et les informations sur l'espèce
-6. Explorez les pages "Observations" et "Statistiques" pour voir les données collectées
-
-## Espèces prises en charge
-
-L'application peut actuellement identifier les empreintes de 13 espèces de mammifères:
-
-- Castor
-- Chat
-- Chien
-- Coyote
-- Écureuil
-- Lapin
-- Loup
-- Ours
-- Putois
-- Ragondin
-- Rat
-- Raton Laveur
-- Renard
-
-## Contribuer
-
-Nous encourageons les contributions! Voici comment vous pouvez contribuer:
-
-1. Fork le projet
-2. Créez une branche pour votre fonctionnalité (`git checkout -b feature/amazing-feature`)
-3. Committez vos changements (`git commit -m 'Add some amazing feature'`)
-4. Push vers la branche (`git push origin feature/amazing-feature`)
-5. Ouvrez une Pull Request
-
-## Licence
-
-Ce projet est sous licence MIT - voir le fichier LICENSE pour plus de détails.
-
-## Contact
-
-Pour toute question ou suggestion, veuillez nous contacter à contact@wildlens.org
+Théo Versace, développeur IA et data scientist. [theoversace.com](https://theoversace.com)
